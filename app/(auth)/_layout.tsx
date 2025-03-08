@@ -11,6 +11,9 @@ export default function RootLayout() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        contentStyle: {
+          backgroundColor: "#121212",
+        },
       }}
     >
       <Stack.Screen name="login" options={{ title: "Login" }} />

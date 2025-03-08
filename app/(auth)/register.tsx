@@ -1,6 +1,7 @@
 import { globalStyles } from "@/styles/global";
+import { Link, useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
 
 type Inputs = {
   email: string;
@@ -21,6 +22,8 @@ export default function Register() {
     },
   });
   const onSubmit = (data: Inputs) => console.log(data);
+
+  const router = useRouter();
 
   return (
     <View style={globalStyles.container}>
@@ -97,6 +100,12 @@ export default function Register() {
 
       <View className="bg-gray-800 rounded-md mt-8">
         <Button color="white" title="Submit" onPress={handleSubmit(onSubmit)} />
+      </View>
+
+      <View className="mt-6">
+        <TouchableOpacity onPress={() => router.replace("/(auth)/login")}>
+          <Text style={globalStyles.text}>Already have an account? Login!</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
