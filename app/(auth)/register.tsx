@@ -1,7 +1,10 @@
 import { globalStyles } from "@/styles/global";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "@/FirebaseConfig";
 
 type Inputs = {
   email: string;
@@ -21,12 +24,25 @@ export default function Register() {
       confirmPassword: "",
     },
   });
-  const onSubmit = (data: Inputs) => console.log(data);
+
+  const onSubmit = async (data: Inputs) => {
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      if (user) router.replace("/");
+    } catch (error: any) {
+      console.log("error");
+      alert("Sign in failed: " + error.message);
+    }
+  };
 
   const router = useRouter();
 
   return (
-    <View style={globalStyles.container}>
+    <SafeAreaView style={globalStyles.container}>
       <Text style={globalStyles.header}>Register</Text>
 
       <View className="mb-2">
@@ -107,6 +123,6 @@ export default function Register() {
           <Text style={globalStyles.text}>Already have an account? Login!</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

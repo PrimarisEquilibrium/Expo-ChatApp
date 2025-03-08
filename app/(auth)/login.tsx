@@ -1,5 +1,7 @@
+import { auth } from "@/FirebaseConfig";
 import { globalStyles } from "@/styles/global";
-import { Link, useRouter } from "expo-router";
+import { signInWithEmailAndPassword } from "@firebase/auth";
+import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
 
@@ -19,7 +21,19 @@ export default function Login() {
       password: "",
     },
   });
-  const onSubmit = (data: Inputs) => console.log(data);
+  const onSubmit = async (data: Inputs) => {
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      if (user) router.replace("/");
+    } catch (error: any) {
+      console.log("error");
+      alert("Sign in failed: " + error.message);
+    }
+  };
 
   const router = useRouter();
 
