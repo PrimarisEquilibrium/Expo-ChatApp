@@ -10,10 +10,15 @@ export const globalStyles = StyleSheet.create({
   header: {
     color: "white",
     fontSize: 32,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   label: {
     color: "white",
     fontSize: 24,
+  },
+  textInput: {
+    fontSize: 16,
+    marginTop: 8,
+    color: "white",
   },
 });
