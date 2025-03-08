@@ -1,4 +1,3 @@
-import { globalStyles } from "@/styles/global";
 import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import {
