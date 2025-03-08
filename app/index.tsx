@@ -1,20 +1,34 @@
-import { auth } from "@/FirebaseConfig";
-import { getAuth } from "@firebase/auth";
-import { router } from "expo-router";
-import { TouchableOpacity, View, Text } from "react-native";
+import { Link } from "expo-router";
+import { View, Text, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function Index() {
-  getAuth().onAuthStateChanged((user) => {
-    if (!user) router.replace("/(auth)/login");
-  });
+  const router = useRouter();
 
   return (
-    <View className="mx-4">
-      <View className="bg-gray-800 rounded-md mt-8 p-4">
-        <TouchableOpacity onPress={() => auth.signOut()}>
-          <Text className="text-white text-center">Sign Out</Text>
-        </TouchableOpacity>
-      </View>
+    <View className="flex-1 bg-[#121212] p-5 mx-4 justify-center">
+      <Text className="text-4xl font-bold text-[#BB86FC] text-center mb-8">
+        Welcome to ChatApp
+      </Text>
+      <Text className="text-lg text-[#E0E0E0] text-center mb-8">
+        Built with React Native, Expo, and Firebase
+      </Text>
+
+      <TouchableOpacity
+        onPress={() => router.push("/(auth)/register")}
+        activeOpacity={0.7}
+        className="bg-[#BB86FC] rounded-lg p-3 mb-3 items-center"
+      >
+        <Text className="text-white text-lg font-semibold">Register</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => router.push("/(auth)/login")}
+        activeOpacity={0.7}
+        className="bg-[#BB86FC] rounded-lg p-3 mb-3 items-center"
+      >
+        <Text className="text-white text-lg font-semibold">Login</Text>
+      </TouchableOpacity>
     </View>
   );
 }

@@ -44,6 +44,17 @@ export default function Register() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212] p-5 mx-4 justify-center">
+      <TouchableOpacity
+        onPress={() => router.push("/")}
+        style={{
+          position: "absolute",
+          top: 60,
+          zIndex: 10,
+        }}
+      >
+        <Ionicons name="arrow-back" size={30} color="#BB86FC" />
+      </TouchableOpacity>
+
       <Text className="text-4xl font-bold text-[#BB86FC] text-center mb-8">
         Register
       </Text>
@@ -111,7 +122,7 @@ export default function Register() {
         )}
       </View>
 
-      <View className="mb-5">
+      <View className="mb-10">
         <Text className="text-lg text-[#E0E0E0] mb-2">Confirm Password:</Text>
         <Controller
           control={control}
@@ -146,18 +157,10 @@ export default function Register() {
       <TouchableOpacity
         onPress={handleSubmit(onSubmit)}
         activeOpacity={0.7}
-        className="bg-[#BB86FC] rounded-lg p-3 mb-5 items-center"
+        className="bg-[#BB86FC] rounded-lg p-3 items-center"
       >
         <Text className="text-white text-lg font-semibold">Submit</Text>
       </TouchableOpacity>
-
-      <View className="mt-5">
-        <TouchableOpacity onPress={() => router.replace("/(auth)/login")}>
-          <Text className="text-[#BB86FC] text-center text-lg">
-            Already have an account? Login!
-          </Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }

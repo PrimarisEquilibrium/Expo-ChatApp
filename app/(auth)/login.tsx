@@ -43,6 +43,17 @@ export default function Login() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212] p-5 mx-4 justify-center">
+      <TouchableOpacity
+        onPress={() => router.push("/")}
+        style={{
+          position: "absolute",
+          top: 60,
+          zIndex: 10,
+        }}
+      >
+        <Ionicons name="arrow-back" size={30} color="#BB86FC" />
+      </TouchableOpacity>
+
       <Text className="text-4xl font-bold text-[#BB86FC] text-center mb-8">
         Login
       </Text>
@@ -78,7 +89,7 @@ export default function Login() {
         )}
       </View>
 
-      <View className="mb-5">
+      <View className="mb-10">
         <Text className="text-lg text-[#E0E0E0] mb-2">Password:</Text>
         <Controller
           control={control}
@@ -117,14 +128,6 @@ export default function Login() {
       >
         <Text className="text-white text-lg font-semibold">Submit</Text>
       </TouchableOpacity>
-
-      <View className="mt-5">
-        <TouchableOpacity onPress={() => router.replace("/(auth)/register")}>
-          <Text className="text-[#BB86FC] text-center text-lg">
-            Don't have an account? Register!
-          </Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
