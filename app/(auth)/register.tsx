@@ -1,10 +1,16 @@
 import { globalStyles } from "@/styles/global";
 import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
-import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  View,
+} from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "@/FirebaseConfig";
+import { Ionicons } from "@expo/vector-icons";
 
 type Inputs = {
   email: string;
@@ -18,11 +24,7 @@ export default function Register() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
+    defaultValues: { email: "", password: "", confirmPassword: "" },
   });
 
   const onSubmit = async (data: Inputs) => {
@@ -35,26 +37,26 @@ export default function Register() {
       if (user) router.replace("/");
     } catch (error: any) {
       console.log("error");
-      alert("Sign in failed: " + error.message);
+      alert("Sign up failed: " + error.message);
     }
   };
 
   const router = useRouter();
 
   return (
-    <SafeAreaView style={globalStyles.container}>
-      <Text style={globalStyles.header}>Register</Text>
+    <SafeAreaView className="flex-1 bg-[#121212] p-5 mx-4 justify-center">
+      <Text className="text-4xl font-bold text-[#BB86FC] text-center mb-8">
+        Register
+      </Text>
 
-      <View className="mb-2">
-        <Text style={globalStyles.label}>Email:</Text>
+      <View className="mb-5">
+        <Text className="text-lg text-[#E0E0E0] mb-2">Email:</Text>
         <Controller
           control={control}
-          rules={{
-            required: true,
-          }}
+          rules={{ required: "Email is required." }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              style={globalStyles.textInput}
+              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
               placeholder="Email"
               onBlur={onBlur}
               onChangeText={onChange}
@@ -64,20 +66,28 @@ export default function Register() {
           name="email"
         />
         {errors.email && (
-          <Text className="text-red-200 mt-2">This is required.</Text>
+          <View className="flex-row items-center mt-1">
+            <Ionicons
+              name="warning"
+              size={16}
+              color="#FF7F50"
+              className="mr-2"
+            />
+            <Text className="text-sm text-[#FF7F50]">
+              {errors.email.message}
+            </Text>
+          </View>
         )}
       </View>
 
-      <View className="mb-4">
-        <Text style={globalStyles.label}>Password:</Text>
+      <View className="mb-5">
+        <Text className="text-lg text-[#E0E0E0] mb-2">Password:</Text>
         <Controller
           control={control}
-          rules={{
-            required: true,
-          }}
+          rules={{ required: "Password is required." }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              style={globalStyles.textInput}
+              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
               placeholder="Password"
               onBlur={onBlur}
               onChangeText={onChange}
@@ -88,39 +98,65 @@ export default function Register() {
           name="password"
         />
         {errors.password && (
-          <Text className="text-red-200 mt-2">This is required.</Text>
+          <View className="flex-row items-center mt-1">
+            <Ionicons
+              name="warning"
+              size={16}
+              color="#FF7F50"
+              className="mr-2"
+            />
+            <Text className="text-sm text-[#FF7F50]">
+              {errors.password.message}
+            </Text>
+          </View>
         )}
       </View>
 
-      <Text style={globalStyles.label}>Confirm Password:</Text>
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={globalStyles.textInput}
-            placeholder="Confirm Password"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            secureTextEntry={true}
-          />
+      <View className="mb-5">
+        <Text className="text-lg text-[#E0E0E0] mb-2">Confirm Password:</Text>
+        <Controller
+          control={control}
+          rules={{ required: "Confirm Password is required." }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
+              placeholder="Confirm Password"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              secureTextEntry={true}
+            />
+          )}
+          name="confirmPassword"
+        />
+        {errors.confirmPassword && (
+          <View className="flex-row items-center mt-1">
+            <Ionicons
+              name="warning"
+              size={16}
+              color="#FF7F50"
+              className="mr-2"
+            />
+            <Text className="text-sm text-[#FF7F50]">
+              {errors.confirmPassword.message}
+            </Text>
+          </View>
         )}
-        name="confirmPassword"
-      />
-      {errors.confirmPassword && (
-        <Text className="text-red-200 mt-2">This is required.</Text>
-      )}
-
-      <View className="bg-gray-800 rounded-md mt-8">
-        <Button color="white" title="Submit" onPress={handleSubmit(onSubmit)} />
       </View>
 
-      <View className="mt-6">
+      <TouchableOpacity
+        onPress={handleSubmit(onSubmit)}
+        activeOpacity={0.7}
+        className="bg-[#BB86FC] rounded-lg p-3 mb-5 items-center"
+      >
+        <Text className="text-white text-lg font-semibold">Submit</Text>
+      </TouchableOpacity>
+
+      <View className="mt-5">
         <TouchableOpacity onPress={() => router.replace("/(auth)/login")}>
-          <Text style={globalStyles.text}>Already have an account? Login!</Text>
+          <Text className="text-[#BB86FC] text-center text-lg">
+            Already have an account? Login!
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
