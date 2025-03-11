@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { Client, ID, Storage } from "react-native-appwrite";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
+import AvatarPicker from "@/components/AvatarPicker";
 
 type Inputs = {
   username: string;
@@ -45,19 +46,6 @@ export default function Register() {
   const client = new Client().setEndpoint(endpoint).setProject(projectId);
 
   const storage = new Storage(client);
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setFile(result.assets[0]);
-    }
-  };
 
   const {
     control,
@@ -151,24 +139,7 @@ export default function Register() {
         className="mt-32"
       >
         <SafeAreaView className="p-5 mx-4">
-          <View className="flex items-center justify-center mb-5">
-            <TouchableOpacity
-              onPress={pickImage}
-              className="relative w-[120px] h-[120px] rounded-full bg-[#1E1E1E] overflow-hidden"
-            >
-              {file?.uri ? (
-                <Image
-                  source={{ uri: file.uri }}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Ionicons name="person-circle" size={120} color="#BB86FC" />
-              )}
-            </TouchableOpacity>
-            <Text className="text-center text-[#BB86FC] mt-3">
-              Tap to change your avatar
-            </Text>
-          </View>
+          <AvatarPicker file={file} setFile={setFile} />
 
           <FormInput
             label="Username:"
