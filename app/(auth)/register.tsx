@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   View,
-  Button,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
@@ -84,7 +83,7 @@ export default function Register() {
         <Text className="text-lg text-[#E0E0E0] mb-2">Username:</Text>
         <Controller
           control={control}
-          rules={{ required: "Password is required." }}
+          rules={{ required: "Username is required." }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
