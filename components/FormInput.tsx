@@ -7,7 +7,7 @@ const FormInput = ({
   name,
   control,
   rules,
-  errors,
+  error,
   isPassword = false,
 }: any) => {
   return (
@@ -20,7 +20,7 @@ const FormInput = ({
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
-              placeholder="Username"
+              placeholder={label}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -29,7 +29,7 @@ const FormInput = ({
           )}
           name={name}
         />
-        {errors.username && (
+        {error && (
           <View className="flex-row items-center mt-1">
             <Ionicons
               name="warning"
@@ -37,9 +37,7 @@ const FormInput = ({
               color="#FF7F50"
               className="mr-2"
             />
-            <Text className="text-sm text-[#FF7F50]">
-              {errors.username.message}
-            </Text>
+            <Text className="text-sm text-[#FF7F50]">{error.message}</Text>
           </View>
         )}
       </View>

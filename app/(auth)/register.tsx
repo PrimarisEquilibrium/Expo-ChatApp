@@ -67,7 +67,7 @@ export default function Register() {
         console.log(error);
       }
 
-      if (user) router.replace("/");
+      if (user) router.replace("/home");
     } catch (error: any) {
       alert("Sign up failed: " + error.message);
       console.log(error);
@@ -107,7 +107,7 @@ export default function Register() {
             name="username"
             control={control}
             rules={{ required: "Username is required." }}
-            errors={errors}
+            error={errors.username}
           />
 
           <View className="mb-5">
@@ -120,7 +120,7 @@ export default function Register() {
             name="email"
             control={control}
             rules={{ required: "Email is required." }}
-            errors={errors}
+            error={errors.email}
           />
 
           <FormInput
@@ -128,7 +128,7 @@ export default function Register() {
             name="password"
             control={control}
             rules={{ required: "Password is required." }}
-            errors={errors}
+            error={errors.password}
             isPassword={true}
           />
 
