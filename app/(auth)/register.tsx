@@ -1,12 +1,6 @@
 import { useRouter } from "expo-router";
-import { useForm, Controller } from "react-hook-form";
-import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  View,
-} from "react-native";
+import { useForm } from "react-hook-form";
+import { Text, TouchableOpacity, SafeAreaView, View } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
