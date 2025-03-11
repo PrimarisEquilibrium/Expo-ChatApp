@@ -6,24 +6,45 @@ import {
   TouchableOpacity,
   SafeAreaView,
   View,
+  Button,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import { useState } from "react";
 
 type Inputs = {
+  username: string;
   email: string;
   password: string;
-  confirmPassword: string;
 };
 
 export default function Register() {
+  // Datepicker state
+  const [date, setDate] = useState(new Date());
+
+  const onChange = (
+    event: DateTimePickerEvent,
+    selectedDate?: Date | undefined
+  ): void => {
+    if (event.type === "set" && selectedDate) {
+      setDate(selectedDate);
+    }
+  };
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: { email: "", password: "", confirmPassword: "" },
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
   });
 
   const onSubmit = async (data: Inputs) => {
@@ -60,6 +81,48 @@ export default function Register() {
       </Text>
 
       <View className="mb-5">
+        <Text className="text-lg text-[#E0E0E0] mb-2">Username:</Text>
+        <Controller
+          control={control}
+          rules={{ required: "Password is required." }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
+              placeholder="Username"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+          name="username"
+        />
+        {errors.username && (
+          <View className="flex-row items-center mt-1">
+            <Ionicons
+              name="warning"
+              size={16}
+              color="#FF7F50"
+              className="mr-2"
+            />
+            <Text className="text-sm text-[#FF7F50]">
+              {errors.username.message}
+            </Text>
+          </View>
+        )}
+      </View>
+
+      <View className="mb-5">
+        <Text className="text-lg text-[#E0E0E0] mb-2">Date of Birth:</Text>
+        <View className="-ml-4">
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            onChange={onChange}
+          />
+        </View>
+      </View>
+
+      <View className="mb-5">
         <Text className="text-lg text-[#E0E0E0] mb-2">Email:</Text>
         <Controller
           control={control}
@@ -90,7 +153,7 @@ export default function Register() {
         )}
       </View>
 
-      <View className="mb-5">
+      <View className="mb-8">
         <Text className="text-lg text-[#E0E0E0] mb-2">Password:</Text>
         <Controller
           control={control}
@@ -117,38 +180,6 @@ export default function Register() {
             />
             <Text className="text-sm text-[#FF7F50]">
               {errors.password.message}
-            </Text>
-          </View>
-        )}
-      </View>
-
-      <View className="mb-10">
-        <Text className="text-lg text-[#E0E0E0] mb-2">Confirm Password:</Text>
-        <Controller
-          control={control}
-          rules={{ required: "Confirm Password is required." }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
-              placeholder="Confirm Password"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              secureTextEntry={true}
-            />
-          )}
-          name="confirmPassword"
-        />
-        {errors.confirmPassword && (
-          <View className="flex-row items-center mt-1">
-            <Ionicons
-              name="warning"
-              size={16}
-              color="#FF7F50"
-              className="mr-2"
-            />
-            <Text className="text-sm text-[#FF7F50]">
-              {errors.confirmPassword.message}
             </Text>
           </View>
         )}
