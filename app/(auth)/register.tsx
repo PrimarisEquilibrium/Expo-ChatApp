@@ -132,7 +132,6 @@ export default function Register() {
             isPassword={true}
           />
 
-          {/* Submit Button */}
           <TouchableOpacity
             onPress={handleSubmit(onSubmit)}
             activeOpacity={0.7}
