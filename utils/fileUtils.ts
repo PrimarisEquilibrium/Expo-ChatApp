@@ -11,10 +11,14 @@ const createProfilePicture = async (
   if (file) {
     const fileInfo = await FileSystem.getInfoAsync(file.uri);
 
+    // If the file has width and height, calculate the size based on that
     let fileSize = file.width * file.height;
+
+    // If the file exists, override the size with the actual file size from the file system
     if (fileInfo.exists) {
       fileSize = fileInfo.size;
     }
+
     const fileToUpload = {
       uri: file.uri,
       type: file.type || "image/jpeg",

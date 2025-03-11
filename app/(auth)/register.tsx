@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Image,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/FirebaseConfig";
@@ -17,8 +16,6 @@ import { useState } from "react";
 import DatePicker from "@/components/DatePicker";
 import FormInput from "@/components/FormInput";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
-import { Client, ID, Storage } from "react-native-appwrite";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import AvatarPicker from "@/components/AvatarPicker";
 import { createProfilePicture } from "@/utils/fileUtils";

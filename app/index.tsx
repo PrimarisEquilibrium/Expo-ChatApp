@@ -1,4 +1,3 @@
-import { Link } from "expo-router";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -11,7 +10,7 @@ export default function Index() {
         Welcome to ChatApp
       </Text>
       <Text className="text-lg text-[#E0E0E0] text-center mb-8">
-        Built with React Native, Expo, and Firebase
+        Built with React Native, Expo, Firebase, and Appwrite
       </Text>
 
       <TouchableOpacity
