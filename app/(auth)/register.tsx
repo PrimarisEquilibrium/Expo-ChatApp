@@ -10,9 +10,7 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useState } from "react";
 
 type Inputs = {
@@ -23,15 +21,22 @@ type Inputs = {
 
 export default function Register() {
   // Datepicker state
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  const onChange = (
-    event: DateTimePickerEvent,
-    selectedDate?: Date | undefined
-  ): void => {
-    if (event.type === "set" && selectedDate) {
-      setDate(selectedDate);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date: Date) => {
+    if (date) {
+      setDate(date);
     }
+    hideDatePicker();
   };
 
   const {
@@ -112,13 +117,31 @@ export default function Register() {
 
       <View className="mb-5">
         <Text className="text-lg text-[#E0E0E0] mb-2">Date of Birth:</Text>
-        <View className="-ml-4">
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            onChange={onChange}
+        <TouchableOpacity
+          onPress={showDatePicker}
+          className="bg-[#1E1E1E] flex-row items-center p-3 rounded-lg border-2 border-[#BB86FC]"
+        >
+          <Ionicons
+            name="calendar"
+            size={20}
+            color="#BB86FC"
+            className="mr-2"
           />
-        </View>
+          <Text className="text-white">
+            {date.toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </Text>
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          display="inline"
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
       </View>
 
       <View className="mb-5">
