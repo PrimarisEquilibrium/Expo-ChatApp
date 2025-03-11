@@ -21,6 +21,7 @@ import * as FileSystem from "expo-file-system";
 import { Client, ID, Storage } from "react-native-appwrite";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import AvatarPicker from "@/components/AvatarPicker";
+import { createProfilePicture } from "@/utils/fileUtils";
 
 type Inputs = {
   username: string;
@@ -34,18 +35,6 @@ export default function Register() {
 
   // Image Picker state
   const [file, setFile] = useState<ImagePicker.ImagePickerAsset | null>(null);
-
-  const projectId = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID;
-  const endpoint = process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT;
-  const bucketId = process.env.EXPO_PUBLIC_APPWRITE_BUCKET_ID;
-
-  if (!projectId || !endpoint || !bucketId) {
-    throw new Error("Appwrite project ID, endpoint, or bucket ID is missing!");
-  }
-
-  const client = new Client().setEndpoint(endpoint).setProject(projectId);
-
-  const storage = new Storage(client);
 
   const {
     control,
@@ -67,30 +56,7 @@ export default function Register() {
         data.password
       );
 
-      let profilePictureUrl = null;
-
-      if (file) {
-        const fileInfo = await FileSystem.getInfoAsync(file.uri);
-
-        let fileSize = file.width * file.height;
-        if (fileInfo.exists) {
-          fileSize = fileInfo.size;
-        }
-        const fileToUpload = {
-          uri: file.uri,
-          type: file.type || "image/jpeg",
-          name: file.uri.split("/").pop() || "image.jpg",
-          size: fileSize,
-        };
-
-        const fileId = ID.unique();
-
-        await storage.createFile(bucketId, fileId, fileToUpload);
-
-        const fileViewUrl = storage.getFileView(bucketId, fileId);
-
-        profilePictureUrl = fileViewUrl.toString();
-      }
+      const profilePictureUrl = await createProfilePicture(file);
 
       const profileRef = doc(db, "profiles", user.uid);
       try {
@@ -101,11 +67,13 @@ export default function Register() {
         });
       } catch (error) {
         alert("Error creating/updating profile: " + error);
+        console.log(error);
       }
 
       if (user) router.replace("/");
     } catch (error: any) {
       alert("Sign up failed: " + error.message);
+      console.log(error);
     }
   };
 
