@@ -12,6 +12,7 @@ import { auth } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import DatePicker from "@/components/DatePicker";
+import FormInput from "@/components/FormInput";
 
 type Inputs = {
   username: string;
@@ -68,104 +69,35 @@ export default function Register() {
         Register
       </Text>
 
-      <View className="mb-5">
-        <Text className="text-lg text-[#E0E0E0] mb-2">Username:</Text>
-        <Controller
-          control={control}
-          rules={{ required: "Username is required." }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
-              placeholder="Username"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="username"
-        />
-        {errors.username && (
-          <View className="flex-row items-center mt-1">
-            <Ionicons
-              name="warning"
-              size={16}
-              color="#FF7F50"
-              className="mr-2"
-            />
-            <Text className="text-sm text-[#FF7F50]">
-              {errors.username.message}
-            </Text>
-          </View>
-        )}
-      </View>
+      <FormInput
+        label="Username:"
+        name="username"
+        control={control}
+        rules={{ required: "Username is required." }}
+        errors={errors}
+      />
 
       <View className="mb-5">
         <Text className="text-lg text-[#E0E0E0] mb-2">Date of Birth:</Text>
         <DatePicker date={date} setDate={setDate} />
       </View>
 
-      <View className="mb-5">
-        <Text className="text-lg text-[#E0E0E0] mb-2">Email:</Text>
-        <Controller
-          control={control}
-          rules={{ required: "Email is required." }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
-              placeholder="Email"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="email"
-        />
-        {errors.email && (
-          <View className="flex-row items-center mt-1">
-            <Ionicons
-              name="warning"
-              size={16}
-              color="#FF7F50"
-              className="mr-2"
-            />
-            <Text className="text-sm text-[#FF7F50]">
-              {errors.email.message}
-            </Text>
-          </View>
-        )}
-      </View>
+      <FormInput
+        label="Email:"
+        name="email"
+        control={control}
+        rules={{ required: "Email is required." }}
+        errors={errors}
+      />
 
-      <View className="mb-8">
-        <Text className="text-lg text-[#E0E0E0] mb-2">Password:</Text>
-        <Controller
-          control={control}
-          rules={{ required: "Password is required." }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
-              placeholder="Password"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              secureTextEntry={true}
-            />
-          )}
-          name="password"
-        />
-        {errors.password && (
-          <View className="flex-row items-center mt-1">
-            <Ionicons
-              name="warning"
-              size={16}
-              color="#FF7F50"
-              className="mr-2"
-            />
-            <Text className="text-sm text-[#FF7F50]">
-              {errors.password.message}
-            </Text>
-          </View>
-        )}
-      </View>
+      <FormInput
+        label="Password:"
+        name="password"
+        control={control}
+        rules={{ required: "Password is required." }}
+        errors={errors}
+        isPassword={true}
+      />
 
       <TouchableOpacity
         onPress={handleSubmit(onSubmit)}

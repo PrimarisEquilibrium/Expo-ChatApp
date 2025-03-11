@@ -4,13 +4,12 @@ import { Text } from "react-native";
 import { TouchableOpacity } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-// Structure of DatePicker prop
-interface Props {
+interface DatePickerProps {
   date: Date;
   setDate: (date: Date) => void;
 }
 
-const DatePicker: FC<Props> = ({ date, setDate }) => {
+const DatePicker: FC<DatePickerProps> = ({ date, setDate }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
