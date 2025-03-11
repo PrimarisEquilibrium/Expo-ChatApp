@@ -89,8 +89,6 @@ export default function Register() {
 
         const fileViewUrl = storage.getFileView(bucketId, fileId);
 
-        console.log(fileViewUrl);
-
         profilePictureUrl = fileViewUrl.toString();
       }
 
@@ -101,14 +99,12 @@ export default function Register() {
           profilePictureUrl: profilePictureUrl,
           dateOfBirth: Timestamp.fromDate(date),
         });
-        console.log("Profile created/updated successfully!");
       } catch (error) {
-        console.error("Error creating/updating profile:", error);
+        alert("Error creating/updating profile: " + error);
       }
 
       if (user) router.replace("/");
     } catch (error: any) {
-      console.log(error);
       alert("Sign up failed: " + error.message);
     }
   };
