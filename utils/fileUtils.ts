@@ -3,6 +3,11 @@ import * as FileSystem from "expo-file-system";
 import { ID } from "react-native-appwrite";
 import { bucketId, storage } from "@/AppwriteConfig";
 
+/**
+ * Stores the profile picture image in an Appwrite bucket.
+ * @param file The image extracted from expo image picker.
+ * @returns The profile picture url created in the Appwrite bucket.
+ */
 const createProfilePicture = async (
   file: ImagePicker.ImagePickerAsset | null
 ) => {
