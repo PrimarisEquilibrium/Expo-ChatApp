@@ -1,5 +1,5 @@
 import { auth } from "@/FirebaseConfig";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -12,6 +12,7 @@ import { Image } from "expo-image";
 import { DocumentData } from "firebase/firestore";
 import { User } from "@firebase/auth";
 import { getUserProfile } from "@/utils/firebaseUtils";
+import { Ionicons } from "@expo/vector-icons";
 
 const chatData = [
   {
@@ -78,18 +79,25 @@ export default function Home() {
 
   return (
     <View className="flex-1 bg-[#121212] px-5 pt-12 mt-4 mx-2">
-      <View className="flex-row items-center mb-4">
-        {profile?.profilePictureUrl && (
-          <Image
-            style={styles.profileImage}
-            source={{ uri: profile.profilePictureUrl }}
-            contentFit="cover"
-            transition={1000}
-          />
-        )}
-        <Text className="text-4xl font-bold text-[#BB86FC] ml-4">
-          Messenger
-        </Text>
+      <View className="flex-row items-center mb-4 justify-between">
+        <View className="flex-row items-center">
+          {profile?.profilePictureUrl && (
+            <Image
+              style={styles.profileImage}
+              source={{ uri: profile.profilePictureUrl }}
+              contentFit="cover"
+              transition={1000}
+            />
+          )}
+          <Text className="text-4xl font-bold text-[#BB86FC] ml-4">
+            Messenger
+          </Text>
+        </View>
+        <View>
+          <Link href="/addMessage">
+            <Ionicons name="add-circle" size={38} color="#BB86FC" />
+          </Link>
+        </View>
       </View>
       <FlatList
         data={chatData}

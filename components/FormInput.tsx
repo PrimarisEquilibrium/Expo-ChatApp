@@ -8,6 +8,8 @@ const FormInput = ({
   control,
   rules,
   error,
+  className = "bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2",
+  multiline = false,
   isPassword = false,
 }: any) => {
   return (
@@ -19,12 +21,13 @@ const FormInput = ({
           rules={rules}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="bg-[#1E1E1E] text-white p-3 rounded-lg border-2 border-[#BB86FC] mb-2"
+              className={className}
               placeholder={label}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
               secureTextEntry={isPassword}
+              multiline={multiline}
             />
           )}
           name={name}
