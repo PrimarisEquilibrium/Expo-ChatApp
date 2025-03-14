@@ -1,8 +1,20 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { auth } from "@/FirebaseConfig";
 
 export default function Index() {
   const router = useRouter();
+
+  // If user is already logged in redirect them to the home page
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        router.replace("/home");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   return (
     <View className="flex-1 bg-[#121212] p-5 mx-4 justify-center">
