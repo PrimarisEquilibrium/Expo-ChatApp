@@ -30,7 +30,7 @@ export default function RootLayout() {
           presentation: "modal",
           headerLeft: () => {
             return (
-              <TouchableOpacity onPress={() => router.back()}>
+              <TouchableOpacity onPress={() => router.dismiss()}>
                 <Ionicons name="arrow-back" size={30} color="white" />
               </TouchableOpacity>
             );

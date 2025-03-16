@@ -12,13 +12,18 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "@/components/DatePicker";
 import FormInput from "@/components/FormInput";
 import * as ImagePicker from "expo-image-picker";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import AvatarPicker from "@/components/AvatarPicker";
 import { createProfilePicture } from "@/utils/fileUtils";
+import {
+  manipulateAsync,
+  SaveFormat,
+  useImageManipulator,
+} from "expo-image-manipulator";
 
 type Inputs = {
   username: string;
@@ -31,7 +36,27 @@ export default function Register() {
   const [date, setDate] = useState<Date>(new Date());
 
   // Image Picker state
-  const [file, setFile] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  const [profileImage, setProfileImage] =
+    useState<ImagePicker.ImagePickerAsset | null>(null);
+
+  // Image Manipulation Hook
+  const context = useImageManipulator(profileImage?.uri ?? "");
+
+  useEffect(() => {
+    const processImage = async () => {
+      if (profileImage?.uri) {
+        context.resize({ width: 80, height: 80 });
+        const image = await context.renderAsync();
+        const resizedImage = await image.saveAsync({ format: SaveFormat.PNG });
+
+        setProfileImage((prev) =>
+          prev ? { ...prev, uri: resizedImage.uri } : null
+        );
+      }
+    };
+
+    processImage();
+  }, [profileImage]);
 
   const {
     control,
@@ -53,7 +78,7 @@ export default function Register() {
         data.password
       );
 
-      const profilePictureUrl = await createProfilePicture(file);
+      const profilePictureUrl = await createProfilePicture(profileImage);
 
       const profileRef = doc(db, "profiles", user.uid);
       try {
@@ -100,7 +125,7 @@ export default function Register() {
         className="mt-32"
       >
         <SafeAreaView className="p-5 mx-4">
-          <AvatarPicker file={file} setFile={setFile} />
+          <AvatarPicker file={profileImage} setFile={setProfileImage} />
 
           <FormInput
             label="Username:"

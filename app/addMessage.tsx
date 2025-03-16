@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import FormInput from "@/components/FormInput";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 type Inputs = {
   email: string;
@@ -29,6 +30,16 @@ export default function AddMessage() {
   });
 
   const onSubmit = (data: Inputs) => {
+    const auth = getAuth();
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User -> Conversations -> Messages
+        // Messages: {<author_id>, <text>, <timestamp>}
+        // On submit add a new conversation to the sender and receiver
+      }
+    });
+
     console.log("Message Sent:", data);
     router.push("/home");
   };
