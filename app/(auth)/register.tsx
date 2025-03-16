@@ -12,18 +12,14 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DatePicker from "@/components/DatePicker";
 import FormInput from "@/components/FormInput";
 import * as ImagePicker from "expo-image-picker";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import AvatarPicker from "@/components/AvatarPicker";
 import { createProfilePicture } from "@/utils/fileUtils";
-import {
-  manipulateAsync,
-  SaveFormat,
-  useImageManipulator,
-} from "expo-image-manipulator";
+import * as ImageManipulator from "expo-image-manipulator";
 
 type Inputs = {
   username: string;
@@ -39,25 +35,6 @@ export default function Register() {
   const [profileImage, setProfileImage] =
     useState<ImagePicker.ImagePickerAsset | null>(null);
 
-  // Image Manipulation Hook
-  const context = useImageManipulator(profileImage?.uri ?? "");
-
-  useEffect(() => {
-    const processImage = async () => {
-      if (profileImage?.uri) {
-        context.resize({ width: 80, height: 80 });
-        const image = await context.renderAsync();
-        const resizedImage = await image.saveAsync({ format: SaveFormat.PNG });
-
-        setProfileImage((prev) =>
-          prev ? { ...prev, uri: resizedImage.uri } : null
-        );
-      }
-    };
-
-    processImage();
-  }, [profileImage]);
-
   const {
     control,
     handleSubmit,
@@ -72,30 +49,35 @@ export default function Register() {
 
   const onSubmit = async (data: Inputs) => {
     try {
-      const { user: user } = await createUserWithEmailAndPassword(
+      const { user } = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
 
-      const profilePictureUrl = await createProfilePicture(profileImage);
+      let profilePictureUrl = null;
 
-      const profileRef = doc(db, "profiles", user.uid);
-      try {
-        await setDoc(profileRef, {
-          username: data.username,
-          profilePictureUrl: profilePictureUrl,
-          dateOfBirth: Timestamp.fromDate(date),
-        });
-      } catch (error) {
-        alert("Error creating/updating profile: " + error);
-        console.log(error);
+      if (profileImage?.uri) {
+        const resizedImage = await ImageManipulator.manipulateAsync(
+          profileImage.uri,
+          [{ resize: { width: 80, height: 80 } }],
+          { format: ImageManipulator.SaveFormat.PNG }
+        );
+        profilePictureUrl = await createProfilePicture(resizedImage);
       }
 
-      if (user) router.replace("/home");
+      await setDoc(doc(db, "profiles", user.uid), {
+        uid: user.uid,
+        username: data.username,
+        email: data.email,
+        profilePictureUrl: profilePictureUrl,
+        dateOfBirth: Timestamp.fromDate(date),
+      });
+
+      router.replace("/home");
     } catch (error: any) {
       alert("Sign up failed: " + error.message);
-      console.log(error);
+      console.error(error);
     }
   };
 
