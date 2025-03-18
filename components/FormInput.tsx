@@ -28,6 +28,7 @@ const FormInput = ({
               value={value}
               secureTextEntry={isPassword}
               multiline={multiline}
+              autoCapitalize="none"
             />
           )}
           name={name}
