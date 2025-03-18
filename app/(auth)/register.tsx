@@ -35,6 +35,8 @@ export default function Register() {
   const [profileImage, setProfileImage] =
     useState<ImagePicker.ImagePickerAsset | null>(null);
 
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
@@ -80,8 +82,6 @@ export default function Register() {
       console.error(error);
     }
   };
-
-  const router = useRouter();
 
   return (
     <KeyboardAvoidingView

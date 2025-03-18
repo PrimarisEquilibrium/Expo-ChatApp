@@ -9,7 +9,16 @@ import {
   ScrollView,
 } from "react-native";
 import FormInput from "@/components/FormInput";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { createGroup, getUserUidFromEmail } from "@/utils/firebaseUtils";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { auth, db } from "@/FirebaseConfig";
 
 type Inputs = {
   email: string;
@@ -29,19 +38,64 @@ export default function AddMessage() {
     },
   });
 
-  const onSubmit = (data: Inputs) => {
-    const auth = getAuth();
+  const onSubmit = async (data: Inputs) => {
+    try {
+      const receiverUid = await getUserUidFromEmail(data.email);
+      const receiverRef = doc(db, "profiles", receiverUid);
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // User -> Conversations -> Messages
-        // Messages: {<author_id>, <text>, <timestamp>}
-        // On submit add a new conversation to the sender and receiver
+      if (!receiverUid) {
+        console.log("No user found with this email");
+        return;
       }
-    });
 
-    console.log("Message Sent:", data);
-    router.push("/home");
+      const user = auth.currentUser;
+      if (!user) {
+        console.log("No authenticated user");
+        return;
+      }
+
+      const senderUid = user.uid;
+      const senderRef = doc(db, "profiles", senderUid);
+
+      // Create group
+      const group = await createGroup(db, senderUid, receiverUid);
+      const groupId = group.id;
+
+      // Send message
+      try {
+        const messageRef = await addDoc(
+          collection(db, "groups", groupId, "messages"),
+          {
+            messageText: data.message,
+            sentAt: serverTimestamp(),
+            sentBy: senderUid,
+          }
+        );
+
+        // Update recent message in group
+        await updateDoc(doc(db, "groups", groupId), {
+          recentMessage: {
+            messageId: messageRef.id,
+            text: data.message,
+            sentBy: senderUid,
+            sentAt: serverTimestamp(),
+          },
+        });
+      } catch (error) {
+        console.error("Error sending message:", error);
+        throw new Error("Failed to send message. Please try again later.");
+      }
+
+      // Update sender's and receiver's profiles
+      await Promise.all([
+        updateDoc(senderRef, { groups: arrayUnion(groupId) }),
+        updateDoc(receiverRef, { groups: arrayUnion(groupId) }),
+      ]);
+
+      router.dismiss();
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return (

@@ -77,6 +77,15 @@ export default function Home() {
     return () => unsubscribe();
   }, [router]);
 
+  const handleSignOut = async () => {
+    try {
+      await auth.signOut();
+      router.replace("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
     <View className="flex-1 bg-[#121212] px-5 pt-12 mt-4 mx-2">
       <View className="flex-row items-center mb-4 justify-between">
@@ -93,10 +102,13 @@ export default function Home() {
             Messenger
           </Text>
         </View>
-        <View>
+        <View className="flex-row gap-4 items-center">
           <Link href="/addMessage">
             <Ionicons name="add-circle" size={38} color="#BB86FC" />
           </Link>
+          <TouchableOpacity onPress={handleSignOut}>
+            <Ionicons name="log-out-outline" size={32} color="#BB86FC" />
+          </TouchableOpacity>
         </View>
       </View>
       <FlatList
